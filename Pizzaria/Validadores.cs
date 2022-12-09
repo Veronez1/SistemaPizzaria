@@ -8,7 +8,7 @@ namespace Pizzaria
 {
     class Validadores
     {
-        public static bool ValidaNome(string nome)
+        public static bool validaNome(string nome)
         {
             if (nome == string.Empty)
             {
@@ -18,7 +18,8 @@ namespace Pizzaria
             }
             return true;
         }
-        public static bool ValidaCpf(string cpf)
+
+        public static bool validaCpf(string cpf)
         {
             if (cpf == null)
             {

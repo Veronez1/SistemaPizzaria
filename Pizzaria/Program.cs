@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-
-
 
 namespace Pizzaria
 {
@@ -13,118 +12,72 @@ namespace Pizzaria
     {
         static void Main(string[] args)
         {
-            var Refrigerante = "";
-            var Borda = "";
-            var sabor = "";
-            var tamanho = "";
             List<Pedido> pedidos = new List<Pedido>();
-            //Tela inicial
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("===============================================================");
-            Console.WriteLine("======= Bem vindo a Pizzaria do Davi Veronez e do Carlos ======");
-            Console.WriteLine("===============================================================\n");
-            Console.WriteLine("\n            [Pressione Enter para Continuar]\n");
-            Console.ReadLine();
-            Console.Clear();
+            List<Pizza> pizzas = new List<Pizza>();
+
+            UI.menuTelaInicial();
 
             //Confirma se nome existe
             Console.WriteLine("Digite seu nome:");
             var nome = Console.ReadLine();
-            var ConfirmaNome = Validadores.ValidaNome(nome);
+            var ConfirmaNome = Validadores.validaNome(nome);
 
             Console.WriteLine("Digite seu CPF: ");
             var cpf = Console.ReadLine();
-            var ConfirmaCpf = Validadores.ValidaCpf(cpf);
+            var ConfirmaCpf = Validadores.validaCpf(cpf);
 
-            var client = new Usuario(nome, cpf);
+            var client = new Cliente(nome, cpf);
             Console.Clear();
             bool check = true;
-            var pedido = new Pedido(client);
-
+            
             //Se validar o nome e o CPF vai rodar o restante do programa
             if (ConfirmaNome == true && ConfirmaCpf == true)
             {
-                Console.WriteLine("Cadastro realizado com sucesso!");
+                UI.menuCadastroRealizado();
 
-                Console.WriteLine("Gostaria de fazer um pedido? Digite (s) para sim e (n) para não");
-                var CriarPedido = Console.ReadLine();
-                if (CriarPedido == "s")
+                UI.menuNovoPedido();
+                var indicadorParaCriarPedido = Console.ReadLine();
+                check = indicadorParaCriarPedido == "s";
+
+                while (check)
                 {
-                    check = true;
-                }
-                else if (CriarPedido == "n")
-                {
-                    check = false;
-                }
-                while (check == true)
-                {
-                    Console.WriteLine("Qual será o sabor da pizza?");
-                    sabor = Console.ReadLine();
-                    Console.Clear();
-                    Console.WriteLine("Qual será o tamanho? (p) = Pequena / (m) = Média / (g) = Grande\n");
-                    Console.WriteLine("Os valores por tamanho são Pequena = + R$ 15\n");
-                    Console.WriteLine("Os valores por tamanho são Média = + R$ 20\n");
-                    Console.WriteLine("Os valores por tamanho são Grande = + R$ 30\n");
-                    tamanho = Console.ReadLine();
-                    Console.Clear();
-                    pedido = new Pedido(client, sabor, tamanho);
+                    var pizza = new Pizza();
+
+                    UI.menuQualSabor();
+                    pizza.sabor = Console.ReadLine();
+                    UI.limpaTela();
+                    
+                    UI.menuQualTamanho();
+                    pizza.tamanho = Console.ReadLine();
+                    UI.limpaTela();
+                    pizzas.Add(pizza);
+
+                    var pedido = new Pedido(client, pizza);
                     pedidos.Add(pedido);
+                    
+                    UI.menuProcessando();
+                    pizza.processarPizza(pizza);
+                    UI.menuPedidoCriado();
 
-                    Console.WriteLine("Processando o pedido...\n");
-                    Thread.Sleep(1300);
-                    Console.WriteLine("==============================\n");
-                    pedido.ProcessarPedido();
+                    UI.menuExtras();
+                    pedido.extras(Console.ReadLine());
+                    UI.limpaTela();
 
-
-                    Console.WriteLine("\nGostaria de um Extra?\n");
-                    Console.WriteLine("Nossas opções são refrigerante e a borda da pizza extra\n");
-                    Console.WriteLine("Digite (s) para sim e (n) para não\n");
-                    var Extra = Console.ReadLine();
-                    Console.Clear();
-                    if (Extra == "s")
-                    {
-                        Console.WriteLine("O valor da borda é R$ 5,00");
-                        Console.WriteLine("\nDigite (s) para confirmar e (n) para recusar\n");
-                        Borda = Console.ReadLine();
-                        Console.Clear();
-                        if (Borda == "s")
-                        {
-                            var preco = pedido.PegaPreco() + 5;
-                            pedido.Preco = preco;
-                        }
-                        Console.WriteLine("O valor do refrigerante é R$ 10,00");
-                        Console.WriteLine("\nDigite (s) para confirmar e (n) para recusar\n");
-                        Refrigerante = Console.ReadLine();
-                        Console.Clear();
-                        if (Refrigerante == "s")
-                        {
-                            var preco = pedido.PegaPreco() + 10;
-                            pedido.Preco = preco;
-
-                        }
-                    }
-
-                    if (Extra == "n")
-                    {
-
-                    }
-                    Console.WriteLine("Gostaria de fazer outro pedido?");
-                    Console.WriteLine("\nDigite (s) para sim e (n) para não");
-                    CriarPedido = Console.ReadLine();
-                    if (CriarPedido == "n")
-                    {
+                    UI.menuOutroPedido();
+                    if (Console.ReadLine() == "n") {
                         check = false;
-                        break;
                     }
-                    check = true;
+                    else
+                    {
+                        check = true;
+                        pedido.pizza.setIdUnico(pedido.pizza.getIdUnico() + 1);
+                    }
                 }
-                Console.Clear();
 
-                Console.WriteLine("Deseja excluir um pedido?\n");
-                Console.WriteLine("\nDigite (s) para sim e (n) para não");
+                UI.limpaTela();
+                UI.DesejaExcluirUmPedido();
                 string RemoverPedido = Console.ReadLine();
-                Console.Clear();
+                UI.limpaTela();
 
                 if (RemoverPedido == "s")
                 {
@@ -140,8 +93,8 @@ namespace Pizzaria
                 
                 else
                 {   //Calcula o Preço
-                    var ValorTotal = pedidos.Select(Valor => Valor.Preco).Sum(Valor => Convert.ToInt32(Valor));
-                    Console.WriteLine(client.Name + " Seu pedido foi finalizado\nO valor do pedido é R$ " + ValorTotal);
+                    var ValorTotal = pedidos.Select(Valor => Valor.pizza.getPreco()).Sum(Valor => Convert.ToInt32(Valor));
+                    Console.WriteLine(client.nome + " Seu pedido foi finalizado\nO valor do pedido é R$ " + ValorTotal);
                     Console.WriteLine("\nDigite o valor a ser pago!");
                     int Pagamento = int.Parse(Console.ReadLine());
     
@@ -159,30 +112,23 @@ namespace Pizzaria
                             {
                                 Console.WriteLine("PAGA!");
                             }
-
+                            
                         }
                     }
-                    Random random = new System.Random();
-                    if (Borda == "s") { Borda = "Adicionada!"; };
-                    if (Borda == "n") { Borda = "Não foi adicionado!"; };
-                    if (Refrigerante == "s") { Refrigerante = "Adicionado!"; };
-                    if (Refrigerante == "n") { Refrigerante = "Não foi adicionado!"; };
-                    if (tamanho == "p") { tamanho = "Pequeno"; };
-                    if (tamanho == "m") { tamanho = "Médio"; };
-                    if (tamanho == "g") { tamanho = "Grande"; };
-                    Console.WriteLine("\nAproveite a Pizza! E volte sempre");
-                    Console.WriteLine("===========================");
-                    Console.WriteLine("======= Notal Fiscal ======");
-                    Console.WriteLine("===========================");
-                    Console.WriteLine("Nome usuário: " + nome);
-                    Console.WriteLine("CPF:          " + cpf);
-                    Console.WriteLine("Preço:        " +"R$"+ ValorTotal); 
-                    Console.WriteLine("Borda:        " + Borda); 
-                    Console.WriteLine("Refrigerante: " + Refrigerante); 
-                    Console.WriteLine("Sabor:        " + sabor);
-                    Console.WriteLine("Tamanho:      " + tamanho); 
+
+
+                    UI. NotaFiscal();
+                    foreach (Pedido pedido in pedidos)
+                    {
+                        Console.WriteLine("Nome usuário: " + pedido.cliente.nome);
+                        Console.WriteLine("CPF:          " + pedido.cliente.cpf);                       
+                        Console.WriteLine("Sabor:        " + pedido.pizza.sabor);
+                        Console.WriteLine("Tamanho:      " + pedido.pizza.tamanho);
+                        Console.WriteLine("===========================");
+                    }
                     Console.WriteLine("Status Nota:  PAGA!");
-                    Console.ReadLine();
+                    Console.WriteLine("Preço:        " + "R$" + ValorTotal);
+
                 }
                 if (ConfirmaNome == false || ConfirmaCpf == false)
                 {

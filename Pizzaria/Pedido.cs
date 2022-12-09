@@ -10,44 +10,38 @@ namespace Pizzaria
     {
         public static int id = 0;
         private int idUnico;
-        public string Sabor;
-        public string Tamanho;
-        public int Preco;
-        public Usuario Usuario;
+        public Pizza pizza;
+        public Cliente cliente;
+        public string borda;
 
-        public Pedido(Usuario usuario)
+        public Pedido(Cliente cliente)
         {
-            this.Usuario = usuario;
+            this.cliente = cliente;
         }
-        public Pedido(Usuario usuario, string sabor, string tamanho)
+
+        public Pedido(Cliente cliente, Pizza pizza)
         {
             this.idUnico = idUnico++;
-
-            this.Sabor = sabor;
-            this.Tamanho = tamanho;
-            this.Usuario = usuario;
+            this.pizza = pizza;
+            this.cliente = cliente;
         }
 
-        public void ProcessarPedido()
+        public void extras(string extras)
         {
-            if (Tamanho == "p")
+            if (extras == "s")
             {
-                this.Preco = 15;
-            }           
-            if (Tamanho == "m")
-            {
-                this.Preco = 20;
-            }
-            if (Tamanho == "g")
-            {
-                this.Preco = 30;
-            }
-            Console.WriteLine("Pedido criado com sucesso!");
-        }
+                UI.menuExtraBorda();
 
-        public int PegaPreco()
-        {
-            return this.Preco;
+                borda = Console.ReadLine();
+                if ( borda == "s")
+                    pizza.setPreco(pizza.getPreco() + 5);
+                UI.limpaTela();
+
+                UI.menuExtraRefrigerante();
+                if (Console.ReadLine() == "s")
+                    pizza.setPreco(pizza.getPreco() + 10);
+                UI.limpaTela();
+            }
         }
 
     }
