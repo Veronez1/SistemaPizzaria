@@ -8,11 +8,11 @@ namespace Pizzaria
 {
     class Pedido
     {
-        public static int id = 0;
         private int idUnico;
         public Pizza pizza;
         public Cliente cliente;
-        public string borda;
+        public string borda = "n";
+        public string refrigerante = "n";
 
         public Pedido(Cliente cliente)
         {
@@ -32,14 +32,20 @@ namespace Pizzaria
             {
                 UI.menuExtraBorda();
 
-                borda = Console.ReadLine();
-                if ( borda == "s")
+                if (Console.ReadLine() == "s")
+                {
                     pizza.setPreco(pizza.getPreco() + 5);
+                    borda = "s";
+                }
+
                 UI.limpaTela();
 
                 UI.menuExtraRefrigerante();
                 if (Console.ReadLine() == "s")
+                {
                     pizza.setPreco(pizza.getPreco() + 10);
+                    refrigerante = "s";
+                }
                 UI.limpaTela();
             }
         }

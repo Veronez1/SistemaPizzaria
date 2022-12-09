@@ -34,12 +34,12 @@ namespace Pizzaria
 
         public static void menuCadastroRealizado() 
         {
-            Console.WriteLine("Cadastro realizado com sucesso!");
+            Console.WriteLine("Cadastro realizado com sucesso!\n\n");
         }
 
         public static void menuNovoPedido()
         { 
-            Console.WriteLine("Gostaria de fazer um pedido? Digite (s) para sim e (n) para não");
+            Console.WriteLine("Gostaria de fazer um pedido? \n\nDigite (s) para sim e (n) para não");
         }
 
         public static void menuQualSabor() 
@@ -49,28 +49,34 @@ namespace Pizzaria
 
         public static void menuQualTamanho() 
         {
-            Console.WriteLine("Qual será o tamanho? (p) = Pequena / (m) = Média / (g) = Grande\n");
-            Console.WriteLine("Os valores por tamanho são Pequena = + R$ 15\n");
-            Console.WriteLine("Os valores por tamanho são Média = + R$ 20\n");
-            Console.WriteLine("Os valores por tamanho são Grande = + R$ 30\n");
+            Console.WriteLine("Qual será o tamanho? \n\n");
+            Console.WriteLine("+----------+-----------+----------+");
+            Console.WriteLine("|  DIGITE  |  TAMANHO  |  PREÇO   |");
+            Console.WriteLine("+----------+-----------+----------+");
+            Console.WriteLine("|    p     | Pequena   | R$ 15,00 |");
+            Console.WriteLine("|    m     | Média     | R$ 20,00 |");
+            Console.WriteLine("|    g     | Grande    | R$ 30,00 |");
+            Console.WriteLine("+----------+-----------+----------+");
+            Console.WriteLine("\n\nDigite");
         }
 
         public static void menuProcessando()
         {
             Console.WriteLine("Processando o pedido...\n");
             Thread.Sleep(1300);
-            Console.WriteLine("==============================\n");
+            Console.WriteLine("==============================");
         }
 
         public static void menuPedidoCriado() 
         {
             Console.WriteLine("Pedido criado com sucesso!");
+            Console.WriteLine("==============================");
         }
 
         public static void menuExtras()
         {
             Console.WriteLine("\nGostaria de um Extra?\n");
-            Console.WriteLine("Nossas opções são refrigerante e a borda da pizza extra\n");
+            Console.WriteLine("Nossas opções são Refrigerante e a Borda da pizza extra\n");
             Console.WriteLine("Digite (s) para sim e (n) para não\n");
         }
 
@@ -106,9 +112,5 @@ namespace Pizzaria
             Console.WriteLine("===========================");
         }
 
-        public static void ValorTotal()
-        {
-            
-        }
     }
 }

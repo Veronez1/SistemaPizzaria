@@ -38,6 +38,7 @@ namespace Pizzaria
                 UI.menuNovoPedido();
                 var indicadorParaCriarPedido = Console.ReadLine();
                 check = indicadorParaCriarPedido == "s";
+                UI.limpaTela();
 
                 while (check)
                 {
@@ -58,6 +59,7 @@ namespace Pizzaria
                     UI.menuProcessando();
                     pizza.processarPizza(pizza);
                     UI.menuPedidoCriado();
+                    UI.limpaTela();
 
                     UI.menuExtras();
                     pedido.extras(Console.ReadLine());
@@ -72,6 +74,7 @@ namespace Pizzaria
                         check = true;
                         pedido.pizza.setIdUnico(pedido.pizza.getIdUnico() + 1);
                     }
+                    UI.limpaTela();
                 }
 
                 UI.limpaTela();
@@ -120,14 +123,17 @@ namespace Pizzaria
                     UI. NotaFiscal();
                     foreach (Pedido pedido in pedidos)
                     {
-                        Console.WriteLine("Nome usuário: " + pedido.cliente.nome);
+                        Console.WriteLine("Cliente:      " + pedido.cliente.nome);
                         Console.WriteLine("CPF:          " + pedido.cliente.cpf);                       
                         Console.WriteLine("Sabor:        " + pedido.pizza.sabor);
                         Console.WriteLine("Tamanho:      " + pedido.pizza.tamanho);
+                        Console.WriteLine("Borda:        " + pedido.borda);
+                        Console.WriteLine("Refrigerante: " + pedido.refrigerante);
+                        Console.WriteLine("Preço:        R$" + pedido.pizza.preco + ",00");
                         Console.WriteLine("===========================");
                     }
+                    Console.WriteLine("Valor total:        " + "R$" + ValorTotal);
                     Console.WriteLine("Status Nota:  PAGA!");
-                    Console.WriteLine("Preço:        " + "R$" + ValorTotal);
 
                 }
                 if (ConfirmaNome == false || ConfirmaCpf == false)
